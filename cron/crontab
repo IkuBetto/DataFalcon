@@ -1,0 +1,2 @@
+15 12 * * 4 cd /code/; bash /code/HORSE_called_making_data_for_dango.sh
+30 13 * * 4 cd /code/; bash /code/HORSE_making_all_data_for_dango.sh

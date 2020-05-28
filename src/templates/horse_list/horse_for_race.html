@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}全馬情報情報一覧{% endblock title %}
+
+{% block head_extend %}
+<link rel="stylesheet" href="{% static 'index.css' %}">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+<script src="{% static 'index.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="main">
+    <a href="{% url 'race_list:race' %}">
+    <div class="changebutton">
+        <button class="change">レース別馬一覧へ切り替え</button>
+    </div>
+    </a>
+    <div class="container">
+        <form action="{% url 'horse_list:horse_of_all' %}" method="GET" name="dayform">
+        <div class="row dates">
+            {% for day,day_ja in days_li %}
+            {% if day == date_of_race %}
+            <div class="col-md-4 date">
+                <input type="radio" class="datecheck_for_race" name="date_of_race" id="{{day}}_for_race" value="{{day}}" checked="true" onclick="document.forms.dayform.submit()">
+                    <label for="{{day}}_for_race" class="date_border_for_race" id="{{day}}label_for_race">{{day_ja}}</label>
+                </input>
+            </div>
+            {% else %}
+            <div class="col-md-4 date">
+                <input type="radio" class="datecheck_for_race" name="date_of_race" id="{{day}}_for_race" value="{{day}}" onclick="document.forms.dayform.submit()">
+                    <label for="{{day}}_for_race" class="date_border_for_race" id="{{day}}label_for_race">{{day_ja}}</label>
+                </input>
+            </div>
+            {% endif %}
+            {% endfor %}        
+        </div>
+        </form>
+    </div>
+    <a href="{% url 'horse_list:export_all' %}">
+    <div class="csv-button_for_race"><button class="export_button">CSVエクスポート</button></div>
+    </a>
+    <div class="container-fluide">
+        <div class="row rela">
+            <table class="horse_table_for_race" border="2" align="center">
+                <tr class="table_h_for_race">
+                    <td>場所</td>
+                    <td>レース名</td>
+                    <td class="horse_name_for_race">馬名</td>
+                    <td>走</td>
+                    <td>過去レース名</td>
+                    <td><div class="flex"><div class="my-parts" onclick="emerge()"><span></span></div><span>着順</span>
+                        <form action="{% url 'horse_list:horse_of_all' %}" class="sortform" method="GET">
+                            <label class="sortblock">
+                                <img src="{% static 'icon_up.png' %}" alt="up">
+                                <input class="ranksortbutton" type="submit" name="sort" value="rank_acc"></input>
+                            </label>
+                            <label class="sortblock">
+                                <img src="{% static 'icon_down.png' %}" alt="down">
+                                <input class="ranksortbutton" type="submit" name="sort" value="rank_dis"></input>
+                            </label>
+                            <input type="hidden" name="rankfrom" value="{{rankfrom}}"><input type="hidden" name="rankto" value="{{rankto}}">
+                            <input type="hidden" name="date_of_race" value="{{date_of_race}}">
+                        </form>
+                        </div>
+                    </td>
+                    <td>頭数</td>
+                    <td><div class="flex"><span>上位馬の次走平均順位</span>
+                        <form action="{% url 'horse_list:horse_of_all' %}" method="GET" class="sortform">
+                            <label class="sortblock">
+                                <img src="{% static 'icon_up.png' %}" alt="up">
+                                <input class="ranksortbutton" type="submit" name="sort" value="upperrank_acc"></input>
+                            </label>
+                            <label class="sortblock">
+                                <img src="{% static 'icon_down.png' %}" alt="down">
+                                <input class="ranksortbutton" type="submit" name="sort" value="upperrank_dis"></input>
+                            </label>
+                            <input type="hidden" name="rankfrom" value="{{rankfrom}}"><input type="hidden" name="rankto" value="{{rankto}}">
+                            <input type="hidden" name="date_of_race" value="{{date_of_race}}">
+                        </form> 
+                        </div>
+                    </td>
+                    <td><div class="flex"><span>下位馬の次走平均順位</span>
+                        <form action="{% url 'horse_list:horse_of_all' %}" method="GET" class="sortform">
+                            <label class="sortblock">
+                                <img src="{% static 'icon_up.png' %}" alt="up">
+                                <input class="ranksortbutton" type="submit" name="sort" value="lowerrank_acc"></input>
+                            </label>
+                            <label class="sortblock">
+                                <img src="{% static 'icon_down.png' %}" alt="down">
+                                <input class="ranksortbutton" type="submit" name="sort" value="lowerrank_dis"></input>
+                            </label>
+                            <input type="hidden" name="rankfrom" value="{{rankfrom}}"><input type="hidden" name="rankto" value="{{rankto}}">
+                            <input type="hidden" name="date_of_race" value="{{date_of_race}}">
+                        </form>
+                        </div>
+                    </td>
+                </tr>
+                {% for horse in horses %}
+                <tr>
+                    <td>{{horse.1}}</td>
+                    <td>{{horse.3}}</td>
+                    <td>{{horse.4}}</td>
+                    <td>{{horse.10}}走前</td>
+                    <td>{{horse.5}}</td>
+                    <td>{{horse.6}}位</td>
+                    <td>{{horse.7}}頭</td>
+                    <td>{{horse.8}}位</td>
+                    <td>{{horse.9}}位</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+    <div id="search_form" class="searchform">
+        <div class="full"><span class="search_head">着順検索</span></div>
+        <form action="{% url 'horse_list:horse_of_all'%}" method="GET">
+            <div class="search_form_in">
+                <div class="input_form">
+                    <input type="number" name="rankfrom" class="form_in" placeholder="from"><span class="nyoro">~</span><input type="number" name="rankto" class="form_in" placeholder="to">
+                </div>
+                <input type="hidden" name="sort" value="{{sort}}">
+                <input type="hidden" name="date_of_race" value="{{date_of_race}}">
+                <input type="submit" value="検索" class="submit_form">
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

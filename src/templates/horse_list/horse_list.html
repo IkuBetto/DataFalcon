@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}全馬一覧{% endblock title %}
+
+{% block head_extend %}
+<link rel="stylesheet" href="{% static 'index.css' %}">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+<script src="{% static 'index.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="main">
+    <a href="{% url 'horse_list:horse_of_all' %}">
+    <div class="changebutton">
+        <button class="change">全馬一覧へ切り替え</button>
+    </div>
+    </a>
+    <a href="{% url 'horse_list:export' %}">
+    <div class="csv-button"><button class="export_button">CSVエクスポート</button></div>
+    </a>
+    <div class="container-fluide">
+        <div class="selectalign">
+            <p class="select">{{name}}</p>
+        </div>
+        <div class="row">
+            <table class="horse_table" border="2" align="center">
+                <tr class="table_h">
+                    <td class="nom">No.</td>
+                    <td class="horse_name">馬名</td>
+                    <td colspan="6">1走前</td>
+                    <td colspan="6">2走前</td>
+                    <td colspan="6">3走前</td>
+                    <td colspan="6">4走前</td>
+                    <td colspan="6">5走前</td>
+                </tr>
+                {% for horse in horses %}
+                <tr class="border_t">
+                    <td rowspan="2" style="background-color: {{horse.30}}; color: {{horse.31}};">{{forloop.counter}}</td>
+                    <td rowspan="2">{{horse.4}}</td>
+                    <td colspan="2" class="col_2" style="background-color: {{horse.32}};">{{horse.5}}</td>
+                    <td colspan="2" style="background-color: {{horse.32}};">{{horse.10}}位</td>
+                    <td colspan="2" style="background-color: {{horse.32}};">{{horse.15}}頭</td>
+                    <td colspan="2" style="background-color: {{horse.33}};">{{horse.6}}</td>
+                    <td colspan="2" style="background-color: {{horse.33}};">{{horse.11}}位</td>
+                    <td colspan="2" style="background-color: {{horse.33}};">{{horse.16}}頭</td>
+                    <td colspan="2" style="background-color: {{horse.34}};">{{horse.7}}</td>
+                    <td colspan="2" style="background-color: {{horse.34}};">{{horse.12}}位</td>
+                    <td colspan="2" style="background-color: {{horse.34}};">{{horse.17}}頭</td>
+                    <td colspan="2" style="background-color: {{horse.35}};">{{horse.8}}</td>
+                    <td colspan="2" style="background-color: {{horse.35}};">{{horse.13}}位</td>
+                    <td colspan="2" style="background-color: {{horse.35}};">{{horse.18}}頭</td>
+                    <td colspan="2" style="background-color: {{horse.36}};">{{horse.9}}</td>
+                    <td colspan="2" style="background-color: {{horse.36}};">{{horse.14}}位</td>
+                    <td colspan="2" style="background-color: {{horse.36}};">{{horse.19}}頭</td>
+                </tr>
+                <tr class="pd_10">
+                    <td colspan="3" style="background-color: {{horse.32}};">上位{{horse.20}}位</td>
+                    <td colspan="3" style="background-color: {{horse.32}};">下位{{horse.25}}位</td>
+                    <td colspan="3" style="background-color: {{horse.33}};">上位{{horse.21}}位</td>
+                    <td colspan="3" style="background-color: {{horse.33}};">下位{{horse.26}}位</td>
+                    <td colspan="3" style="background-color: {{horse.34}};">上位{{horse.22}}位</td>
+                    <td colspan="3" style="background-color: {{horse.34}};">下位{{horse.27}}位</td>
+                    <td colspan="3" style="background-color: {{horse.35}};">上位{{horse.23}}位</td>
+                    <td colspan="3" style="background-color: {{horse.35}};">下位{{horse.28}}位</td>
+                    <td colspan="3" style="background-color: {{horse.36}};">上位{{horse.24}}位</td>
+                    <td colspan="3" style="background-color: {{horse.36}};">下位{{horse.29}}位</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+<div>>
+{% endblock %}

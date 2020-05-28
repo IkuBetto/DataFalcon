@@ -1,0 +1,7 @@
+Django==2.0.4
+uwsgi==2.0.17
+PyMySQL==0.8.0
+pandas
+boto3==1.12.39
+awscli==1.18.39
+s3fs==0.4.2

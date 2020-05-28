@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}レース一覧{% endblock %}
+
+{% block head_extend %}
+<link rel="stylesheet" href="{% static 'index.css' %}">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+<script src="{% static 'index.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="main_race">
+    <a href="{% url 'horse_list:horse_of_all' %}">
+    <div class="changebutton">
+        <button class="change">全馬一覧へ切り替え</button>
+    </div>
+    </a>
+    <div class="container">
+        <div class="row dates">
+            {% for day,day_ja in days_li %}
+            {% if forloop.first %}
+            <div class="col-md-4 date">
+                <input type="radio" class="datecheck" name="raceday" id="{{day}}" value="{{day}}" onclick="chbg('{{day}}')" checked="true">
+                    <label for="{{day}}" class="date_border" id="{{day}}label">{{day_ja}}</label>
+                </input>
+            </div>
+            {% else %}
+            <div class="col-md-4 date">
+                <input type="radio" class="datecheck" name="raceday" id="{{day}}" value="{{day}}" onclick="chbg('{{day}}')">
+                    <label for="{{day}}" class="date_border" id="{{day}}label">{{day_ja}}</label>
+                </input>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+        <div class="place_list">
+        {% for day, day_ja in days_li %}
+        <div id="{{day}}place" class="raceplacebutton">
+            {% for place in places %}
+            {% if  place.0 == day %}
+            <input type="radio" class="date_place" name="{{day}}" id="{{place.0}}{{place.1}}" value="{{place.0}}{{place.1}}" onclick="chtable('{{place.0}}', '{{place.1}}')">
+                <label for="{{place.0}}{{place.1}}" class="place_str"　id="{{place.0}}{{place.1}}label">{{place.1}}</label>
+            </input>
+            {% endif %}
+            {% endfor %}
+        </div>
+        {% endfor %}
+        </div>
+        <div class="table_contents">
+            {% for day,day_ja in days_li %}
+            {% for place in places %}
+            {% if place.0 == day %}
+            <table class="race-table" id="{{place.0}}{{place.1}}table" border="1" align="center">
+                <tr class="tablecol">
+                    <td class="syutsuba bgg">出馬表</td>
+                    <td class="racename bgg">レース名</td>
+                </tr>
+            {% for race in races %}
+            {% if race.0 == place.0 and race.1 == place.1 %}
+                <tr class="tablerace">
+                    <td class="syutsuba">
+                        <a href="{% url 'horse_list:horse_for_race' %}?raceinfo={{race.0}},{{race.1}},{{race.2}},{{race.3}}">{{race.2}}</a>
+                    <td class="racename">{{race.3}}</td>
+                </tr>
+            {% endif %}
+            {% endfor %}
+            </table>
+            {% endif %}
+            {% endfor %}
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

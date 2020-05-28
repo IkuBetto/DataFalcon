@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}ログイン画面{% endblock %}
+
+{% block head_extend %}
+<link rel="stylesheet" href="{% static 'index.css' %}">
+<script src="{% static 'index.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="main_form">
+    <div id="form">
+        <form action="{% url 'auth:login' %}" method='post'>
+            {{ form.non_field_errors }}
+            {% for field in form %}
+            <div class="mbt20">
+                {{ field }}
+                {{ field.errors }}
+            </div>
+            {% endfor %}
+            <p class="submit"><input id="submit_button" type="submit" value="ログイン" /></p>
+            <input type="hidden" name="next" value="{{ next }}" />
+            {% csrf_token %}
+            <!--
+            <p class="loginid"><input type="text" name="loginid" autocomplete="OFF" placeholder="Login ID"/></p>
+            <p class="password"><input type="password" name="password" autocomplete="OFF" placeholder="password"></p>
+            <p class="submit"><input id="submit_button" type="submit" value="ログイン" /></p>
+            -->
+        </form>
+    </div>
+</div>
+{% endblock %}

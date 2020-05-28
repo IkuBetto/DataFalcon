@@ -1,0 +1,44 @@
+version: '3'
+
+services:
+  nginx:
+      image: nginx:1.13
+      ports:
+        - "8000:8000"
+      volumes:
+        - ./nginx/conf:/etc/nginx/conf.d
+        - ./nginx/uwsgi_params:/etc/nginx/uwsgi_params
+        - ./src/static:/static
+      depends_on:
+        - python
+
+  db:
+      image: mysql:5.7
+      command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+      ports:
+        - "3306:3306"
+      environment:
+        MYSQL_ROOT_PASSWORD: 'root'
+        MYSQL_DATABASE: 'test_db'
+        MYSQL_USER: 'test_user'
+        MYSQL_PASSWORD: '&d4PNn%F'
+        TZ: 'Asia/Tokyo'
+      volumes:
+        - ./mysql:/var/lib/mysql
+        - ./sql:/docker-entrypoint-initdb.d
+
+  python:
+      build: ./python
+      command: uwsgi --socket :8001 --module datafalcon.wsgi --py-autoreload 1 --logto /tmp/mylog.log
+      volumes:
+        - ./src:/code
+        - ./src/static:/static
+      environment:
+        AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+        AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+        AWS_DEFAULT_REGION: ap-northeast-1
+        AWS_DEFAULT_OUTPUT: json 
+      expose:
+        - "8001"
+      depends_on:
+        - db
