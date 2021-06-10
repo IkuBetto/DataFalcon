@@ -1,4 +1,4 @@
-Django==2.0.4
+Django==2.2.24
 uwsgi==2.0.17
 PyMySQL==0.8.0
 pandas
